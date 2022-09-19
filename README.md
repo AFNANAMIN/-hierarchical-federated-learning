@@ -1,7 +1,7 @@
 # Hierarchical_FL
 Implementation of HierFAVG algorithm in [Client-Edge-Cloud Hierarchical Federated Learning](https://arxiv.org/abs/1905.06641) with Pytorch.
 
-For running HierFAVG with mnist and lenet:
+For running HierFAVG with mnist :
 ```
 python3 hierfavg 
 --dataset mnist 
