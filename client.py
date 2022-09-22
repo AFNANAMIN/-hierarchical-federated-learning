@@ -9,6 +9,7 @@ from torch.autograd import Variable
 import torch
 from models.initialize_model import initialize_model
 import copy
+import numpy as np
 
 class Client():
 
@@ -55,6 +56,7 @@ class Client():
         return loss
 
     def test_model(self, device):
+        epsilon=0.2
         correct = 0.0
         total = 0.0
         with torch.no_grad():
@@ -66,6 +68,15 @@ class Client():
                 _, predict = torch.max(outputs, 1)
                 total += labels.size(0)
                 correct += (predict == labels).sum().item()
+        labels = np.array([]).astype(int)
+        for image_preds in np.transpose(preds):
+            label_counts = np.bincount(image_preds, minlength=10)
+        beta = 1 / epsilon
+        for i in range(len(label_counts)):
+            label_counts[i] += np.random.gaussian(0, beta, 1)
+        new_label = np.argmax(label_counts)
+        labels = np.append(labels, new_label)
+
         return correct, total
 
     def send_to_edgeserver(self, edgeserver):
