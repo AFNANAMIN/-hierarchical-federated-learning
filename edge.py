@@ -7,6 +7,7 @@
 # 5. Server receives the aggregated information from the cloud server
 
 import copy
+import numpy as np
 from average import average_weights
 
 class Edge():
@@ -58,8 +59,20 @@ class Edge():
         :param args:
         :return:
         """
+        epsilon = 0.2
         received_dict = [dict for dict in self.receiver_buffer.values()]
         sample_num = [snum for snum in self.sample_registration.values()]
+        labels = np.array([]).astype(int)
+        for image_preds in np.transpose(preds):
+            label_counts = np.bincount(image_preds, minlength=10)
+        beta = 1 / epsilon
+        for i in range(len(label_counts)):
+            label_counts[i] += np.random.laplace(0, beta, 1)
+
+
+
+
+
         self.shared_state_dict = average_weights(w = received_dict,
                                                  s_num= sample_num)
 
